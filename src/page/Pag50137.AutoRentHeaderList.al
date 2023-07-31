@@ -155,10 +155,11 @@ page 50137 "Auto Rent Header List"
                 trigger OnAction()
                 var
                     TransferFields: Codeunit TransferFields;
+                    AutoRentLine: Record "Auto Rent Line";
                 begin
                     CurrentCarDamageRegister();
                     TransferFields.TransferfieldsToHeader(Rec);
-                    TransferFields.TransferfieldsToLine();
+                    TransferFields.TransferfieldsToLine(AutoRentLine);
                     rec.Delete();
                 end;
 

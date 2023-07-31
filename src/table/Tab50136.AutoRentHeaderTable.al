@@ -77,7 +77,8 @@ table 50136 "AutoRentHeaderTable"
             begin
                 CheckStatusIssued();
                 CheckFieldReservedUntil();
-                CheckExistingReservations()
+                CheckExistingReservations();
+                InsertFirstLineInRentLine();
             end;
 
         }
@@ -248,4 +249,37 @@ table 50136 "AutoRentHeaderTable"
         end;
     end;
 
+    procedure CalculateDateInterval(var "Reserved From": Date; var "Reserved To": Date) DateInterval: Integer
+    begin
+        IF ("Reserved From" <> 0D) AND ("Reserved To" <> 0D) then begin
+
+            DateInterval := "Reserved To" - "Reserved From";
+            DateInterval := Abs(DateInterval);
+        end;
+    end;
+
+    procedure InsertFirstLineInRentLine()
+    var
+        Resource: Record Resource;
+        AutoRentLine: Record "Auto Rent Line";
+        AutoTable: Record AutoTable;
+    begin
+        if rec."Reserved Until" <> 0D then begin
+            // AutoTable.Reset();
+            // AutoRentLine.FindFirst();
+            AutoRentLine.Init();
+            AutoRentLine."Document No." := rec."Nr.";
+            AutoRentLine."Row No." := 1;
+            AutoRentLine.Type := AutoRentLine.Type::Resource;
+            AutoTable.Get(rec."Car Nr.");
+            AutoRentLine."Nr." := AutoTable."Rental Service";
+            Resource.get(AutoTable."Rental Service");
+            AutoRentLine.Description := Resource.Name;
+            AutoRentLine.Quantity := CalculateDateInterval(Rec."Reserved From", Rec."Reserved Until");
+            AutoRentLine.Price := AutoTable."Rental Price";
+            AutoRentLine.Total := Round(AutoRentLine.Quantity * AutoRentLine.Price);
+            AutoRentLine.Insert(true);
+        end;
+
+    end;
 }

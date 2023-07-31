@@ -2,7 +2,7 @@ table 50133 "AutoTable"
 {
     Caption = 'Auto Information';
     DataClassification = CustomerContent;
-    DrillDownPageId = "Resource Card";
+    // DrillDownPageId = "Resource Card";
 
     fields
     {

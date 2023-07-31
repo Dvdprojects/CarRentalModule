@@ -17,10 +17,9 @@ codeunit 50131 "TransferFields"
         FinishedAutoRentHeader.Insert(true);
     end;
 
-    procedure TransferfieldsToLine()
+    procedure TransferfieldsToLine(var Rec: Record "Auto Rent Line")
     var
         FinishedAutoRentLine: Record "Finished Auto Rent Line";
-        Rec: Record "Auto Rent Line";
     begin
         rec.SetRange("Document No.", rec."Document No.");
         if Rec.FindSet() then
